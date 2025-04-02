@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>إدارة علامات الطلاب</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #4e73df, #1cc88a);
+            color: #fff;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px;
+            background: rgba(0, 0, 0, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            background: #f39c12;
+            color: #fff;
+            text-align: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            background: #e67e22;
+            transform: scale(1.05);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            border: none;
+            font-size: 18px;
+            background: #3498db;
+            color: #fff;
+            text-align: center;
+            transition: background 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn:hover {
+            background: #f39c12;
+            transform: scale(1.05);
+        }
+
+        .admin-form {
+            display: none;
+            background: rgba(44, 62, 80, 0.8);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .table-container {
+            margin-top: 30px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-radius: 10px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            direction: rtl; /* جعل الجدول يعرض من اليمين لليسار */
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        th {
+            background-color: #2c3e50;
+            color: #fff;
+            text-transform: uppercase;
+            border-bottom: 2px solid #f39c12;
+        }
+
+        td {
+            background-color: #34495e;
+        }
+
+        tr:hover {
+            background-color: #f39c12;
+            color: white;
+        }
+
+        td button {
+            padding: 8px 16px;
+            background-color: #e74c3c;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        td button:hover {
+            background-color: #c0392b;
+        }
+
+        .error {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        /* التصميم المتجاوب */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                padding: 20px;
+            }
+
+            h2 {
+                font-size: 24px;
+            }
+
+            .input-field, .btn {
+                font-size: 16px;
+            }
+
+            table {
+                font-size: 14px;
+            }
+        }
+
+        header {
+            background: linear-gradient(135deg, #ff6f61, #f39c12);
+            padding: 60px 0;
+            text-align: center;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+
+        header h1 {
+            color: white;
+            font-size: 48px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        @keyframes fadeIn {
+            0% { opacity: 0; transform: translateY(-20px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        header h1 {
+            animation: fadeIn 1s ease-out;
+        }
+        .by {
+            text-align: center;
+            margin-top: 30px;
+            margin-bottom: 10px;
+            margin-left: 70px;
+            font-size: 1.3em;
+            color: orange;
+            background-color: blanchedalmond;
+            width: 200px;
+            border-radius: 8px;
+        }
+        .nom {
+            margin-left: 140px;
+            font-size: 1.1em;
+        }
+        #ti{
+            margin-left: 50px;
+        }
+        #admno{
+            width:230px;
+            color:white;
+            margin-left: 38px;
+            margin-top: 40px;
+            background-color: red;
+            border-radius: 9px;
+            
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>الامبراطور</h1>
+</header>
+
+<div class="container">
+    <h2>الواجهة الرئيسية</h2>
+    
+    <!-- واجهة المستخدم الرئيسية -->
+    <div class="user-interface">
+        <div class="input-container">
+            <label for="studentId" id="ti">ادخل رقمك الخاص لعرض علامتك </label>
+            <input type="text" id="studentId" class="input-field" placeholder="رقم الطالب">
+        </div>
+
+        <button class="btn" onclick="viewStudentMarks()">عرض علامات الطالب</button>
+
+        <div id="studentTable" style="display:none;">
+            <h3>جدول العلامات للطالب:</h3>
+            <div class="table-container">
+                <table id="marksTable">
+                    <thead>
+                        <tr>
+                            <th>اسم الطالب</th>
+                            <th>رقم الطالب</th>
+                            <th>اسم المادة</th>
+                            <th>علامة المادة</th>
+                        </tr>
+                    </thead>
+                    <tbody id="marksTableBody">
+                        <!-- سيتم إضافة البيانات هنا -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- زر دخول واجهة المسؤول -->
+        <div class="admin-access">
+            <p for="adminPassword" id="admno">..!   🔽 هذا القسم مخصص فقط للمسأول</p>
+            <input type="password" id="adminPassword" class="input-field" placeholder="أدخل كلمة السر للمسؤول">
+            <button class="btn" onclick="adminAccess()">دخول المسؤول</button>
+            <div id="adminError" class="error" style="display:none;">كلمة السر غير صحيحة</div>
+        </div>
+    </div>
+
+    <!-- واجهة المسؤول -->
+    <div class="admin-form" id="adminForm">
+        <h3>إضافة / تعديل بيانات الطالب</h3>
+        
+        <div class="input-container">
+            <label for="studentName">اسم الطالب</label>
+            <input type="text" id="studentName" class="input-field" placeholder="اسم الطالب">
+        </div>
+
+        <div class="input-container">
+            <label for="studentNumber">رقم الطالب</label>
+            <input type="text" id="studentNumber" class="input-field" placeholder="رقم الطالب">
+        </div>
+
+        <div class="input-container">
+            <label for="subjectName">اسم المادة</label>
+            <input type="text" id="subjectName" class="input-field" placeholder="اسم المادة">
+        </div>
+
+        <div class="input-container">
+            <label for="subjectGrade">علامة المادة</label>
+            <input type="number" id="subjectGrade" class="input-field" placeholder="علامة المادة">
+        </div>
+
+        <button class="btn" onclick="addStudentMarks()">إضافة العلامات</button>
+
+        <h3>إدارة العلامات</h3>
+        <div class="table-container">
+            <table id="adminMarksTable">
+                <thead>
+                    <tr>
+                        <th>اسم الطالب</th>
+                        <th>رقم الطالب</th>
+                        <th>اسم المادة</th>
+                        <th>علامة المادة</th>
+                        <th>تعديل</th>
+                        <th>حذف</th>
+                    </tr>
+                </thead>
+                <tbody id="adminTableBody">
+                    <!-- سيتم إضافة البيانات هنا -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<footer class="by">
+    <p>By : Ahmad Al Rahal</p>
+</footer>
+<footer class="nom">
+    <p>© 2025</p>
+</footer>
+<script>
+    let studentMarks = JSON.parse(localStorage.getItem('studentMarks')) || [];
+
+    function adminAccess() {
+        const password = document.getElementById('adminPassword').value;
+        if (password === "12160164708king") {
+            document.getElementById('adminForm').style.display = 'block';
+            document.querySelector('.admin-access').style.display = 'none';
+            document.getElementById('adminError').style.display = 'none';
+            viewAdminTable();
+        } else {
+            document.getElementById('adminError').style.display = 'block';
+        }
+    }
+
+    function viewStudentMarks() {
+        const studentId = document.getElementById('studentId').value;
+        const student = studentMarks.filter(m => m.studentNumber === studentId);
+
+        const tableBody = document.getElementById('marksTableBody');
+        tableBody.innerHTML = '';
+
+        student.forEach(m => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${m.studentName}</td>
+                <td>${m.studentNumber}</td>
+                <td>${m.subjectName}</td>
+                <td>${m.subjectGrade}</td>
+            `;
+            tableBody.appendChild(row);
+        });
+
+        document.getElementById('studentTable').style.display = student.length > 0 ? 'block' : 'none';
+    }
+
+    function addStudentMarks() {
+        const studentName = document.getElementById('studentName').value;
+        const studentNumber = document.getElementById('studentNumber').value;
+        const subjectName = document.getElementById('subjectName').value;
+        const subjectGrade = document.getElementById('subjectGrade').value;
+
+        if (!studentName || !studentNumber || !subjectName || !subjectGrade) {
+            alert('يرجى ملء جميع الحقول');
+            return;
+        }
+
+        studentMarks.push({
+            studentName, studentNumber, subjectName, subjectGrade
+        });
+
+        localStorage.setItem('studentMarks', JSON.stringify(studentMarks));
+
+        viewAdminTable();
+
+        document.getElementById('studentName').value = '';
+        document.getElementById('studentNumber').value = '';
+        document.getElementById('subjectName').value = '';
+        document.getElementById('subjectGrade').value = '';
+    }
+
+    function viewAdminTable() {
+        const adminTableBody = document.getElementById('adminTableBody');
+        adminTableBody.innerHTML = '';
+
+        studentMarks.forEach(m => {
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>${m.studentName}</td>
+                <td>${m.studentNumber}</td>
+                <td>${m.subjectName}</td>
+                <td>${m.subjectGrade}</td>
+                <td><button class="btn" onclick="editStudentMarks('${m.studentNumber}')">تعديل</button></td>
+                <td><button class="btn" onclick="deleteStudentMarks('${m.studentNumber}')">حذف</button></td>
+            `;
+            adminTableBody.appendChild(row);
+        });
+    }
+
+    function editStudentMarks(studentNumber) {
+        const student = studentMarks.find(m => m.studentNumber === studentNumber);
+        if (student) {
+            document.getElementById('studentName').value = student.studentName;
+            document.getElementById('studentNumber').value = student.studentNumber;
+            document.getElementById('subjectName').value = student.subjectName;
+            document.getElementById('subjectGrade').value = student.subjectGrade;
+        }
+    }
+
+    function deleteStudentMarks(studentNumber) {
+        studentMarks = studentMarks.filter(m => m.studentNumber !== studentNumber);
+        localStorage.setItem('studentMarks', JSON.stringify(studentMarks));
+        viewAdminTable();
+    }
+</script>
+
+</body>
+</html>
