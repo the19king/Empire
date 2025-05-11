@@ -753,10 +753,20 @@
 
         // --- Mock Ads Data (Replace with your Adsterra setup) ---
         const adsData = [
-            { id: 'ad1', name: 'إعلان رقم 1', adsterra_code: '' },
-            { id: 'ad2', name: 'إعلان رقم 2', adsterra_code: '' },
-            { id: 'ad3', name: 'إعلان رقم 3', adsterra_code: '' },
-            { id: 'ad4', name: 'إعلان رقم 4', adsterra_code: '' },
+            {
+                id: 'ad1',
+                name: 'إعلان رقم 1',
+                adsterra_key: 'd47d64b672ad6936ea47bd4835bd72a5',
+                adsterra_config: {
+                    format: 'iframe',
+                    height: 250,
+                    width: 300,
+                    params: {}
+                }
+            },
+            { id: 'ad2', name: 'إعلان رقم 2' },
+            { id: 'ad3', name: 'إعلان رقم 3' },
+            { id: 'ad4', name: 'إعلان رقم 4' },
         ];
         const AD_COOLDOWN_HOURS = 8;
         const AD_VIEW_SECONDS = 10;
@@ -1309,22 +1319,45 @@
             const adId = event.target.dataset.adId;
             const adDetails = adsData.find(a => a.id === adId);
             if (!adDetails) return;
-        
+            
             const adName = adDetails.name || "الإعلان";
-            const adsterraCode = adDetails.adsterra_code || 'سيتم عرض الإعلان هنا... (كود Adsterra مفقود)';
-        
             currentAdViewing = adId;
-        
+            
             adViewTitle.textContent = `مشاهدة: ${adName}`;
             adsterraAdPlaceholder.innerHTML = ''; // مسح المحتوى السابق
-            loadScript(adsterraCode, adsterraAdPlaceholder); // استخدام loadScript لعرض الإعلان
-        
+            
+            // إذا كان الإعلان من نوع Adsterra
+            if (adDetails.adsterra_key) {
+                // إنشاء عنصر السكربت الأول (التكوين)
+                const configScript = document.createElement('script');
+                configScript.type = 'text/javascript';
+                configScript.text = `
+                    var atOptions = {
+                        'key': '${adDetails.adsterra_key}',
+                        'format': '${adDetails.adsterra_config.format}',
+                        'height': ${adDetails.adsterra_config.height},
+                        'width': ${adDetails.adsterra_config.width},
+                        'params': ${JSON.stringify(adDetails.adsterra_config.params)}
+                    };
+                `;
+                adsterraAdPlaceholder.appendChild(configScript);
+                
+                // إنشاء عنصر السكربت الثاني (التنفيذ)
+                const invokeScript = document.createElement('script');
+                invokeScript.type = 'text/javascript';
+                invokeScript.src = `https://www.highperformanceformat.com/${adDetails.adsterra_key}/invoke.js`;
+                adsterraAdPlaceholder.appendChild(invokeScript);
+            } else if (adDetails.adsterra_code) {
+                // الطريقة البديلة إذا كان هناك كود جاهز
+                adsterraAdPlaceholder.innerHTML = adDetails.adsterra_code;
+            }
+            
             adViewTimerEl.textContent = AD_VIEW_SECONDS;
             closeAdViewModalBtn.classList.add('hidden');
             forceCloseAdBtn.style.display = 'none';
             adViewModal.classList.add('active');
             adsModal.classList.remove('active');
-        
+            
             let secondsRemaining = AD_VIEW_SECONDS;
             adViewInterval = setInterval(async () => {
                 secondsRemaining--;
@@ -1333,11 +1366,11 @@
                     stopAdViewTimer();
                     addPoints(1);
                     alert(`تمت إضافة 1 نقطة إلى رصيدك لمشاهدة ${adName}!`);
-        
+                    
                     const now = new Date().getTime();
                     adCooldowns[adId] = now + (AD_COOLDOWN_HOURS * 60 * 60 * 1000);
                     await saveUserData();
-        
+                    
                     closeAdViewModalBtn.classList.remove('hidden');
                     forceCloseAdBtn.style.display = 'block';
                     forceCloseAdBtn.textContent = "إغلاق وجمع النقطة";
@@ -1345,7 +1378,6 @@
                 }
             }, 1000);
         }
-
         function stopAdViewTimer() {
             if (adViewInterval) {
                 clearInterval(adViewInterval);
