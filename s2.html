@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>تعليمات تيرمكس</title>
+  <style>
+    /* تنسيق الصفحة والخطوط */
+    body {
+      background-color: #f0f0f0;
+      font-family: 'Arial', sans-serif;
+      padding: 20px;
+      direction: rtl;
+      margin: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: #fff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #333;
+      margin-bottom: 30px;
+    }
+
+    .command {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+      overflow: hidden;
+    }
+
+    .command-title {
+      background-color: #4CAF50;
+      color: #fff;
+      padding: 10px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .command-content {
+      background-color: #fafafa;
+      padding: 15px;
+      border-top: 1px solid #ddd;
+      display: none;
+    }
+
+    .command-content.active {
+      display: block;
+    }
+
+    pre {
+      background-color: #efefef;
+      padding: 10px;
+      border-radius: 3px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>تعليمات تيرمكس</h1>
+
+    <!-- أمر: apt update -->
+    <div class="command">
+      <div class="command-title">apt update</div>
+      <div class="command-content">
+        <p>يقوم هذا الأمر بتحديث قائمة الحزم المتوفرة من المصادر. يُنصح باستخدامه قبل تثبيت أو ترقية أي حزمة.</p>
+        <pre>apt update</pre>
+      </div>
+    </div>
+
+    <!-- أمر: apt upgrade -->
+    <div class="command">
+      <div class="command-title">apt upgrade</div>
+      <div class="command-content">
+        <p>يقوم بترقية الحزم المثبتة إلى أحدث إصدار متاح في المصادر. بعد تحديث القائمة باستخدام apt update، استخدم هذا الأمر لترقية النظام.</p>
+        <pre>apt upgrade</pre>
+      </div>
+    </div>
+
+    <!-- أمر: pkg install -->
+    <div class="command">
+      <div class="command-title">pkg install [اسم الحزمة]</div>
+      <div class="command-content">
+        <p>يستخدم لتثبيت الحزم. على سبيل المثال، لتثبيت Python:</p>
+        <pre>pkg install python</pre>
+      </div>
+    </div>
+
+    <!-- أمر: termux-setup-storage -->
+    <div class="command">
+      <div class="command-title">termux-setup-storage</div>
+      <div class="command-content">
+        <p>يُستخدم هذا الأمر للسماح لتطبيق تيرمكس بالوصول إلى ذاكرة الجهاز (التخزين الداخلي والخارجي).</p>
+        <pre>termux-setup-storage</pre>
+      </div>
+    </div>
+
+    <!-- أمر: ls -->
+    <div class="command">
+      <div class="command-title">ls</div>
+      <div class="command-content">
+        <p>يعرض قائمة الملفات والمجلدات في الدليل الحالي. يمكن استخدام خيارات مثل -la لتعزيز المعلومات.</p>
+        <pre>ls -la</pre>
+      </div>
+    </div>
+
+    <!-- أمر: cd -->
+    <div class="command">
+      <div class="command-title">cd</div>
+      <div class="command-content">
+        <p>يستخدم لتغيير الدليل الحالي. على سبيل المثال، للدخول إلى مجلد التخزين الخاص بالتنزيلات:</p>
+        <pre>cd ~/storage/downloads</pre>
+      </div>
+    </div>
+
+    <!-- أمر: mkdir -->
+    <div class="command">
+      <div class="command-title">mkdir</div>
+      <div class="command-content">
+        <p>يستخدم لإنشاء مجلد جديد. على سبيل المثال، لإنشاء مجلد باسم "MyFolder":</p>
+        <pre>mkdir MyFolder</pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // تفعيل التفاعل مع كل قسم؛ عند النقر على عنوان الأمر يتم عرض/إخفاء التفاصيل.
+    document.addEventListener('DOMContentLoaded', function() {
+      const commands = document.querySelectorAll('.command');
+      commands.forEach(function(command) {
+        const title = command.querySelector('.command-title');
+        title.addEventListener('click', function() {
+          const content = command.querySelector('.command-content');
+          content.classList.toggle('active');
+        });
+      });
+    });
+  </script>
+</body>
+</html>
